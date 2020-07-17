@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: stocktrader-build-pipeline
+  annotations:
+    description: "A build pipeline to build Docker-based images"
+parameters:
+- name: APP_NAME
+  description: The name assigned to all of the application objects defined in this template.
+  displayName: Application Name
+  required: true
+- name: GIT_SOURCE_URL
+  description: The source URL for the application
+  displayName: Source URL
+  required: true
+- name: GIT_SOURCE_REF
+  description: The source Ref for the application
+  displayName: Source Ref
+  required: true
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+  spec:
+    runPolicy: Serial
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${APP_NAME}:latest
+    source:
+      git:
+        uri: ${GIT_SOURCE_URL}
+        ref: ${GIT_SOURCE_REF}
+      type: Git
+    strategy:
+      type: Docker
+      dockerStrategy:
+        buildArgs:
+          - name: keycloak_connection_string
+            value: ""
+          - name: extract_keycloak_cert
+            value: "false"
+    triggers:
+      - type: "ConfigChange"
