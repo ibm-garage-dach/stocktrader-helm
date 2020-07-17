@@ -24,6 +24,7 @@ data:
   tradeHistory.url: {{ tpl .Values.tradeHistory.url . }}
   messaging.notification.url: {{ tpl .Values.messaging.notification.url . }}
   looper.url: {{ tpl .Values.looper.url . }}
+  tradr.publicUrl: {{ tpl .Values.tradr.publicUrl . }}
   apic.url: {{ .Values.stockQuote.apiConnect }}
   iex.url: {{ .Values.stockQuote.iexTrading }}
   odm.url: {{ .Values.odm.url }}
@@ -51,4 +52,5 @@ data:
   mongo.port: "{{ .Values.mongo.port }}"
   mongo.database: {{ .Values.mongo.database }}
   mongo.authDB: {{ .Values.mongo.authDB }}
-
+  appId.tenantId: {{ .Values.appId.tenantId }}
+  appId.oauthServerUrl: {{ .Values.appId.oauthServerUrl }}

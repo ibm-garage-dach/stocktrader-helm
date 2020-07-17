@@ -49,46 +49,36 @@ spec:
               configMapKeyRef:
                 name: {{ .Release.Name }}-config
                 key: jwt.audience
-          - name: OIDC_NAME
+          - name: APPID_TENANT_ID
             valueFrom:
               configMapKeyRef:
                 name: {{ .Release.Name }}-config
-                key: oidc.name
-          - name: OIDC_ISSUER
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Release.Name }}-config
-                key: oidc.issuer
-          - name: OIDC_AUTH
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Release.Name }}-config
-                key: oidc.auth
-          - name: OIDC_TOKEN
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Release.Name }}-config
-                key: oidc.token
-          - name: OIDC_ID
+                key: appId.tenantId
+          - name: APPID_CLIENT_ID
             valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-credentials
-                key: oidc.clientId
-          - name: OIDC_SECRET
+                key: appId.clientId
+          - name: APPID_SECRET
             valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-credentials
-                key: oidc.clientSecret
-          - name: OIDC_KEY
+                key: appId.secret
+          - name: APPID_OAUTH_SERVER_URL
             valueFrom:
               configMapKeyRef:
                 name: {{ .Release.Name }}-config
-                key: oidc.key
-          - name: PROXY_HOST
+                key: appId.oauthServerUrl
+          - name: APP_URL
             valueFrom:
               configMapKeyRef:
                 name: {{ .Release.Name }}-config
-                key: ingress.address
+                key: tradr.publicUrl
+          - name: PORTFOLIO_URL
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-config
+                key: portfolio.url
 {{- if .Values.global.jsonLogging }}
           - name: WLP_LOGGING_CONSOLE_FORMAT
             value: json
@@ -134,7 +124,8 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 3000
+    - name: https
+      port: 3000
   selector:
     app: tradr
 {{- if .Values.global.ingress }}
@@ -177,6 +168,7 @@ spec:
     targetPort: https
   tls:
     termination: passthrough
+    insecureEdgeTerminationPolicy: Redirect
   to:
     kind: Service
     name: {{ .Release.Name }}-tradr-service

@@ -135,3 +135,9 @@ mongo:
   password: <your Mongo password>
   database: <your Mongo database>
   authDB: <your Mongo auth database>
+appId:
+  tenantId: <your tenant id>
+  clientId: <your client id>
+  secret: <your secret id>
+  oauthServerUrl: <your oauth server url>
+  
