@@ -35,5 +35,11 @@ spec:
       port: 9443
       targetPort: 9443
   selector:
+    {{ if (.Values.notificationSlack.enabled) }}
+    app:  notification-slack
+    {{ else if (.Values.notificationTwitter.enabled) }}
+    app:  notification-twitter
+    {{ else }}
     app: notification
+    {{ end }}
 {{- end }}
